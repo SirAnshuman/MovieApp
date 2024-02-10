@@ -6,19 +6,33 @@ import "./App.css";
 const API_URL = "http://www.omdbapi.com/?apikey=ef1c2296";
 
 const App = () => {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState("Spider");
   const [movies, setMovies] = useState([]);
 
   useEffect(() => {
-    searchMovies("Batman");
-  }, []);
+    if (searchTerm.trim() !== "") {
+      searchMovies(searchTerm);
+    }
+  }, [searchTerm]);
 
-  const searchMovies = async (title) => {
-    const response = await fetch(`${API_URL}&s=${title}`);
-    const data = await response.json();
-
-    setMovies(data.Search);
+  //SYNCHRONOUS API CALL
+  const searchMovies = (title) => {
+    fetch(`${API_URL}&s=${title}`)
+      .then(response => response.json())
+      .then(data => setMovies(data.Search))
+      .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+      });
   };
+
+  
+  // Asynchronous API CALL
+  // const searchMovies = async (title) => {
+  //   const response = await fetch(`${API_URL}&s=${title}`);
+  //   const data = await response.json();
+
+  //   setMovies(data.Search);
+  // };
 
   return (
     <div className="app">
